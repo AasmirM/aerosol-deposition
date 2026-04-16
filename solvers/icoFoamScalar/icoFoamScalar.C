@@ -164,8 +164,14 @@ int main(int argc, char *argv[])
 		);
 		cEqn.solve();
 		
-		// Compute the wall flux once (surface field on all faces)
-		wallFlux = -D * fvc::snGrad(c);
+		// Compute total scalar flux (convective + diffusive) at ALL faces
+		wallFlux =	fvc::flux(phi, c, "default") / mesh.magSf()	// convective flux
+																// fvc::flux(phi, c, "default") = phi * c_f = (U . n)*A * c_f
+																// using "default" divSchemes from fvSchemes (divSchemes) to get c_f
+																// divided by face area (mesh.msgSf()) to obtain flux density
+					- D * fvc::snGrad(c);						// diffusive flux
+																// snGrad(c) = grad c . n
+
 
 		// Reset the volume field (internal + all boundaries = 0)
 		wallFluxPatch == dimensionedScalar("zero", wallFlux.dimensions(), 0.0);
