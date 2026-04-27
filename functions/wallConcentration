@@ -1,0 +1,23 @@
+// function to output field of interest for fixedGradient BC case for ParaView
+	
+wallConcentration
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+
+	writeControl    timeStep;		// write per time step
+	writeInterval   1;				// every time step
+
+	regionType      patch;
+	name            wall;   		// patch of interest
+
+	operation       areaAverage;	// options: areaAverage, areaIntegrate, sum, min, max, etc., doesn't matter for this case
+	fields          (c);			// field of interest
+
+	// optional
+	writeFields     true;			// write full field every writeInterval
+	log             true;			// prints the value to the screen/log every writeInterval
+
+	writeToFile     true;			// creates postProcessing/wallConcentration/... files
+	surfaceFormat   vtk;			// no need for VTK output unless you set writeFields true (for ParaView)
+}

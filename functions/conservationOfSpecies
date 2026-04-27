@@ -1,71 +1,74 @@
-	inletFlux
-	{
-		type            surfaceFieldValue;
-		libs            ("libfieldFunctionObjects.so");
-        regionType      patch;
-        name            inlet;
-		
-        writeControl    runTime;
-        writeInterval   0.001;
+// Code for to determine conservation of species
+// Inlet + Outlet + Wall + FluidDomain = 0
 
-        operation       areaIntegrate;
-        fields          (wallFlux);
-		
-		log             true;
-		writeFields     false;
-		writeToFile     true;
-	}
+inletFlux
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+	regionType      patch;			// patch of interest
+	name            inlet;
 	
-	outletFlux
-	{
-		type            surfaceFieldValue;
-		libs            ("libfieldFunctionObjects.so");
-        regionType      patch;
-        name            outlet;
-		
-		writeControl    runTime;
-        writeInterval   0.001;
+	writeControl    timeStep;		// write per time step
+	writeInterval   1;				// every time step
 
-        operation       areaIntegrate;
-        fields          (wallFlux);
-		
-		log             true;
-		writeFields     false;
-		writeToFile     true;
-	}
+	operation       areaIntegrate;
+	fields          (wallFlux);		// field of interest
 	
-	depositionFlux
-    {
-        type            surfaceFieldValue;
-		libs            ("libfieldFunctionObjects.so");
-        regionType      patch;
-        name            wall;
-		
-		writeControl    runTime;
-        writeInterval   0.001;
+	log             true;
+	writeFields     false;
+	writeToFile     true;
+}
 
-        operation       areaIntegrate;
-        fields          (wallFlux);
-		
-		log             true;
-		writeFields     false;
-		writeToFile     true;
-    }
+outletFlux
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+	regionType      patch;
+	name            outlet;			// patch of interest
 	
-	totalMass
-    {
-        type            volFieldValue;
-        libs            ("libfieldFunctionObjects.so");
-		
-		writeControl    runTime;
-        writeInterval   0.001;
+	writeControl    timeStep;		// write per time step
+	writeInterval   1;				// every time step
 
-        regionType      all;
-        operation       volIntegrate;
+	operation       areaIntegrate;
+	fields          (wallFlux);		// field of interest
+	
+	log             true;
+	writeFields     false;
+	writeToFile     true;
+}
 
-        fields          (c);
-		
-		log             true;
-		writeFields     false;
-		writeToFile     true;
-    }
+depositionFlux
+{
+	type            surfaceFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+	regionType      patch;			// patch of interest
+	name            wall;
+	
+	writeControl    timeStep;		// write per time step
+	writeInterval   1;				// every time step
+
+	operation       areaIntegrate;
+	fields          (wallFlux);		// field of interest
+	
+	log             true;
+	writeFields     false;
+	writeToFile     true;
+}
+
+totalMass
+{
+	type            volFieldValue;
+	libs            ("libfieldFunctionObjects.so");
+	
+	writeControl    timeStep;		// write per time step
+	writeInterval   1;				// every time step
+
+	regionType      all;			// volume of interest
+	operation       volIntegrate;
+
+	fields          (c);			// field of interest
+	
+	log             true;
+	writeFields     false;
+	writeToFile     true;
+}
