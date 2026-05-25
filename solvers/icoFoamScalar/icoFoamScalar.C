@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
     #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createMesh.H"
+	#include "createTimeControls.H"
 
     pisoControl piso(mesh);
 
@@ -95,9 +96,10 @@ int main(int argc, char *argv[])
 
     while (runTime.loop())
     {
-        Info<< "Time = " << runTime.timeName() << nl << endl;
-
         #include "CourantNo.H"
+		#include "setDeltaT.H"
+		
+		Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // Momentum predictor
 
